@@ -7,6 +7,7 @@ import com.food.ordering.system.order.service.domain.event.OrderCancelledEvent;
 import com.food.ordering.system.order.service.domain.event.OrderCreatedEvent;
 import com.food.ordering.system.order.service.domain.event.OrderPaidEvent;
 import com.food.ordering.system.order.service.domain.exception.DomainException;
+import com.food.ordering.system.order.service.domain.exception.OrderDomainException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.ZoneId;
@@ -17,8 +18,10 @@ import java.util.List;
 public class OrderDomainServiceImpl implements OrderDomainService {
 
     private static final String UTC = "UTC";
+
     @Override
     public OrderCreatedEvent validateAndInitiateOrder(Order order, Restaurant restaurant) {
+        System.out.println(order);
         validateRestaurant(restaurant);
         setOrderProductInformation(order, restaurant);
         order.validateOrder();
@@ -55,7 +58,7 @@ public class OrderDomainServiceImpl implements OrderDomainService {
 
     private void validateRestaurant(Restaurant restaurant) {
         if (!restaurant.isActive()) {
-            throw new DomainException("Restaurant with id " + restaurant.getId().getValue() + " is not active");
+            throw new OrderDomainException("Restaurant with id " + restaurant.getId().getValue() + " is currently not active!");
         }
     }
 
